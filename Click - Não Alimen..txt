@@ -1,0 +1,76 @@
+CREATE OR REPLACE TABLE
+  `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_clickretire_ecommerce_nao_alimentar_rep` AS
+SELECT
+  a11.ano,
+  a11.Id_cliente,
+  a11.Periodo,
+  a11.Status_questionario,
+  a11.Inicio_questionario,
+  a11.fim_questionario,
+  a11.Codigo_loja,
+  a11.Codigo_loja_Carrefour,
+  a11.Nome_loja,
+  a11.Email,
+  a11.Num_itens_pedido,
+  a11.Nota_NPS,
+  a11.Num_Pedido,
+  a11.Verbatim_NPS,
+  a11.PC_Simpatia_prestatividade_funcionario_loja,
+  a11.PC_Clareza_sobre_como_rerirar_pedido_loja,
+  a11.PC_Compra_recebida_conforme_pedido_realizado,
+  a11.PC_Tempo_duracao_processo,
+  a11.PC_Facilidade_para_encontrar_ponto_coleta,
+  a11.PC_Atendimento_cliente_apos_a_retirada,
+  a11.Acompanhamento_pedido,
+  a11.Ticket_Pedido,
+  a12.tipo_entrega,
+  a12.qtd_pedida,
+  a12.qtd_separada,
+  a12.qtd_substituida,
+  a12.onTime,
+  a12.tipo_subst,
+  a12.regional,
+FROM
+  `br-apps-analytics-eng-prd.db_ae_rep_cie_data.relatorio_clickretire_ecommerce_nao_alimentar` AS a11
+JOIN
+  `br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` AS a12
+ON
+  a12.nome_loja = a11.Nome_loja
+WHERE
+  a11.Inicio_questionario >= '2024-01-01'
+GROUP BY
+  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29;
+INSERT INTO
+  `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_clickretire_ecommerce_nao_alimentar_rep`
+SELECT
+  ano,
+  Id_cliente,
+  Periodo,
+  Status_questionario,
+  Inicio_questionario,
+  fim_questionario,
+  Codigo_loja,
+  Codigo_loja_Carrefour,
+  Nome_loja,
+  Email,
+  Num_itens_pedido,
+  Nota_NPS,
+  Num_Pedido,
+  Verbatim_NPS,
+  PC_Simpatia_prestatividade_funcionario_loja,
+  PC_Clareza_sobre_como_rerirar_pedido_loja,
+  PC_Compra_recebida_conforme_pedido_realizado,
+  PC_Tempo_duracao_processo,
+  PC_Facilidade_para_encontrar_ponto_coleta,
+  PC_Atendimento_cliente_apos_a_retirada,
+  Acompanhamento_pedido,
+  Ticket_Pedido 
+  tipo_entrega,
+  qtd_pedida,
+  qtd_separada,
+  qtd_substituida,
+  onTime,
+  tipo_subst,
+  regional,
+FROM
+ `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_clickretire_ecommerce_nao_alimentar_rep`
