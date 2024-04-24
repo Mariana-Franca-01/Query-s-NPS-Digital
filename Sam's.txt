@@ -1,0 +1,99 @@
+CREATE OR REPLACE TABLE
+  `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_sams_ecommerce_rep` AS
+SELECT
+  a11.ano,
+  a11.Id_cliente,
+  a11.Inicio_questionario,
+  a11.Codigo_loja_Carrefour,
+  a11.Nome_loja,
+  a11.NPS_Pedido,
+  a11.NPS_Entrega,
+  a11.Simpatia_prestatividade_entregador,
+  a11.Atendimento_cliente,
+  a11.PC_Variedade_produtos_importados,
+  a11.Clareza_das_ofertas_promocoes,
+  a11.PC_Compra_recebida_conforme_pedido_realizado,
+  a11.Prazo_proposto_para_entrega,
+  a11.Disponibilidadede_produtos,
+  a11.Respeito_prazos_validade_produtos,
+  a11.Facilidade_buscar_localizar_produtos,
+  a11.Custo_frete,
+  a11.Experiencia_com_entrega,
+  a11.Informacoes_produtos_fotos_dicas,
+  a11.Facilidade_navegar_site_app,
+  a11.Formas_pagamento_oferecidas,
+  a11.Preco_geral,
+  a11.Promocoes_atrativas,
+  a11.PC_Qualidade_produtos_menbers_mark,
+  a11.Qualidade_frescor_carnes,
+  a11.PC_Qualidade_produtos_geral,
+  a11.Facilidade_fazer_pagamento_pedido,
+  a11.Acompanhamento_pedido,
+  a11.PC_Variedade_produtos_menbers_mark,
+  a11.Tempo_carregamento_paginas,
+  a11.Verbatim_NPS_Entrega,
+  a11.Verbatim_NPS_Pedido,
+  a11.numbercommand_valeur,
+  a12.tipo_entrega,
+  a12.qtd_pedida,
+  a12.qtd_separada,
+  a12.qtd_substituida,
+  a12.onTime,
+  a12.tipo_subst,
+  a12.regional,
+FROM
+  `br-apps-analytics-eng-prd.db_ae_rep_cie_data.relatorio_sams_ecommerce` AS a11
+JOIN
+  `br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` AS a12
+ON
+  a12.nome_loja = a11.Nome_loja
+WHERE
+  a11.Inicio_questionario >= '2024-01-01'
+GROUP BY
+  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40;
+
+INSERT INTO
+  `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_sams_ecommerce_rep`
+SELECT
+  ano,
+  Id_cliente,
+  Inicio_questionario,
+  Codigo_loja_Carrefour,
+  Nome_loja,
+  NPS_Pedido,
+  NPS_Entrega,
+  Simpatia_prestatividade_entregador,
+  Atendimento_cliente,
+  PC_Variedade_produtos_importados,
+  Clareza_das_ofertas_promocoes,
+  PC_Compra_recebida_conforme_pedido_realizado,
+  Prazo_proposto_para_entrega,
+  Disponibilidadede_produtos,
+  Respeito_prazos_validade_produtos,
+  Facilidade_buscar_localizar_produtos,
+  Custo_frete,
+  Experiencia_com_entrega,
+  Informacoes_produtos_fotos_dicas,
+  Facilidade_navegar_site_app,
+  Formas_pagamento_oferecidas,
+  Preco_geral,
+  Promocoes_atrativas,
+  PC_Qualidade_produtos_menbers_mark,
+  Qualidade_frescor_carnes,
+  PC_Qualidade_produtos_geral,
+  Facilidade_fazer_pagamento_pedido,
+  Acompanhamento_pedido,
+  PC_Variedade_produtos_menbers_mark,
+  Tempo_carregamento_paginas,
+  Verbatim_NPS_Entrega,
+  Verbatim_NPS_Pedido,
+  numbercommand_valeur
+  tipo_entrega,
+  qtd_pedida,
+  qtd_separada,
+  qtd_substituida,
+  onTime,
+  tipo_subst,
+  regional,
+FROM
+  `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_sams_ecommerce_rep`
