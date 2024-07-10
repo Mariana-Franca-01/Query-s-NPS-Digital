@@ -34,11 +34,19 @@ SELECT
   a12.tipo_subst,
   a12.regional,
   a12.grupo_pagamento,
-  a12.qtd_sku
+  a12.qtd_sku,
+  a13.MOTIVO_DO_REAGENDAMENTO,
+  a13.Status_de_reagendamento,
+  a14.is_churn,
+  a14.pc_churn
 FROM
   `br-apps-analytics-eng-prd.db_ae_rep_cie_data.relatorio_clickretire_ecommerce_alimentar` AS a11
 INNER JOIN
-`br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` AS a12 ON 
-   a11.Num_Pedido = a12.pedido
+  `br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` AS a12 ON
+  a11.Num_Pedido = a12.pedido
+LEFT JOIN `br-apps-intelig-comercial-prd.ecomm_ops.TBL_REAGENDAMENTO` a13 ON
+  a11.Num_Pedido = SAFE_CAST(a13.N__MERO_DO_PEDIDO AS STRING)
+LEFT JOIN `br-apps-analytics-eng-dev.db_strategy_and_health.churn_ecomm_food` a14 ON
+  SAFE_CAST(a11.Inicio_questionario AS DATE) = SAFE_CAST(a14.transaction_month AS DATE)
 GROUP BY
-  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34;
+  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38;
