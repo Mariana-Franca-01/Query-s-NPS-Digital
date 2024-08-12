@@ -80,7 +80,7 @@ LEFT JOIN `br-apps-dolphin-ddp-prd.db_dolphin_target_client.tbl_protocol` AS a14
   a11.Inicio_questionario = a14.dt_partition
 LEFT JOIN `br-apps-dolphin-ddp-prd.db_dolphin_datasharing_performaxxi.tbl_performaxxi_delivery_orders` AS a15 
   ON
-  a11.Num_Pedido = a15.Entregas_Pedidos_IdPedido
+  a12.ecommerceId = a15.Entregas_Pedidos_IdPedido
 LEFT JOIN `br-apps-analytics-eng-dev.db_strategy_and_health.churn_ecomm_food` AS a16
   ON
   a11.Inicio_questionario = a16.transaction_month
