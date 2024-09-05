@@ -1,5 +1,27 @@
-CREATE OR REPLACE TABLE
-  `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_sams_ecommerce_rep` AS
+
+CREATE OR REPLACE TABLE `br-apps-analytics-eng-prd.db_da_rep_supply.relatorio_sams_ecommerce_rep` AS
+WITH a16 AS (
+SELECT 
+    a.id, 
+    a.name AS locationName,
+    a.referenceId,
+    a.latitude,
+    a.longitude,
+    a.address.state,
+    a.address.city,
+    a.address.street,
+    REGEXP_REPLACE(SUBSTR(a.referenceId, 0, IF(STRPOS(a.referenceId, '-') - 1 < 0, 0, STRPOS(a.referenceId, '-') - 1)), '[^0-9]', '') AS cod_store,
+    b.locations, -- Substitua pelos campos de interesse da tbl_janis_details_picker
+    b.firstname,
+    b.lastname
+FROM 
+    `br-apps-dolphin-ddp-prd.db_dolphin_janis_source.tbl_janis_details_locations` a
+JOIN 
+    `br-apps-dolphin-ddp-prd.db_dolphin_janis_source.tbl_janis_details_picker` b
+ON 
+    REGEXP_REPLACE(SUBSTR(a.referenceId, 0, IF(STRPOS(a.referenceId, '-') - 1 < 0, 0, STRPOS(a.referenceId, '-') - 1)), '[^0-9]', '') = b.locations
+GROUP BY ALL
+)
 SELECT
   a11.ano,
   a11.Id_cliente,
@@ -50,20 +72,23 @@ SELECT
   a15.NomeTransportadora, 
   a15.Entregas_Pedidos_IdPedido, 
   a15.NomeMotorista,
-  a15.Entregas_Bandeira
+  a15.Entregas_Bandeira,
+
 FROM
   `br-apps-analytics-eng-prd.db_ae_rep_cie_data.relatorio_sams_ecommerce` AS a11
 INNER JOIN
-`br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` AS a12 ON 
-   a11.numbercommand_valeur = substr(ecommerceId,0,strpos(ecommerceid,'-')-1)
-LEFT JOIN `br-apps-intelig-comercial-prd.ecomm_ops.TBL_REAGENDAMENTO` AS a13 
-  ON
-  a11.numbercommand_valeur = CAST(a13.N__MERO_DO_PEDIDO AS STRING)
-LEFT JOIN `br-apps-dolphin-ddp-prd.db_dolphin_target_client.tbl_protocol` AS a14
-  ON
-  a11.Inicio_questionario = a14.dt_partition
-LEFT JOIN `br-apps-dolphin-ddp-prd.db_dolphin_datasharing_performaxxi.tbl_performaxxi_delivery_orders` AS a15 
-  ON
-  a12.ecommerceId = a15.Entregas_Pedidos_IdPedido
-GROUP BY
+  `br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` AS a12 
+    ON a11.numbercommand_valeur = SUBSTR(a12.ecommerceId, 0, STRPOS(a12.ecommerceId, '-') - 1) 
+LEFT JOIN 
+  `br-apps-intelig-comercial-prd.ecomm_ops.TBL_REAGENDAMENTO` AS a13 
+    ON a11.numbercommand_valeur = CAST(a13.N__MERO_DO_PEDIDO AS STRING) 
+LEFT JOIN 
+  `br-apps-dolphin-ddp-prd.db_dolphin_target_client.tbl_protocol` AS a14
+    ON a11.Inicio_questionario = a14.dt_partition
+LEFT JOIN 
+  `br-apps-dolphin-ddp-prd.db_dolphin_datasharing_performaxxi.tbl_performaxxi_delivery_orders` AS a15 
+    ON a12.ecommerceId = a15.Entregas_Pedidos_IdPedido
+LEFT JOIN a16 
+   ON a16.cod_store = a11.Codigo_loja_Carrefour
+GROUP BY 
   1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50;
