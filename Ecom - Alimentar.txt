@@ -7,23 +7,6 @@ CREATE OR REPLACE TABLE
     FROM `br-apps-dolphin-ddp-prd.db_dolphin_target_client.tbl_protocol`
     WHERE ds_category NOT LIKE 'Suporte Multicanal%'
   )
-a17 AS (
-  SELECT 
-    a.id, 
-    a.referenceId,
-    REGEXP_REPLACE(SUBSTR(a.referenceId, 0, IF(STRPOS(a.referenceId, '-') - 1 < 0, 0, STRPOS(a.referenceId, '-') - 1)), '[^0-9]', '') AS transformed_referenceId,
-    b.cod_store,
-    c.firstname,
-    c.lastname
-  FROM 
-    `br-apps-dolphin-ddp-prd.db_dolphin_janis_source.tbl_janis_details_locations` a
-  LEFT JOIN 
-    `br-cg-dadoscorporativos-prd.db_operacoes.tbl_IPP` b 
-    ON REGEXP_REPLACE(SUBSTR(a.referenceId, 0, IF(STRPOS(a.referenceId, '-') - 1 < 0, 0, STRPOS(a.referenceId, '-') - 1)), '[^0-9]', '') = b.cod_store
-  LEFT JOIN `br-apps-dolphin-ddp-prd.db_dolphin_janis_source.tbl_janis_details_picker` c 
-    ON a.id = REGEXP_EXTRACT(c.locations, r'\[([^\]]+)\]')
-GROUP BY ALL
-)
 SELECT
   a11.ano,
   a11.Id_cliente,
@@ -74,6 +57,7 @@ SELECT
   a12.regional,
   a12.grupo_pagamento,
   a12.qtd_sku,
+  a12.nome_pickers,
   a13.MOTIVO_DO_REAGENDAMENTO,
   a13.Status_de_reagendamento,
   a14.ds_category,
@@ -83,9 +67,7 @@ SELECT
   a15.NomeMotorista,
   a16.is_churn,
   a16.pc_churn,
-  a17.firstname,
-  a17.lastname
-
+  
 FROM
   `br-apps-analytics-eng-prd.db_ae_rep_cie_data.relatorio_ecommerce_alimentar` AS a11
 INNER JOIN
@@ -99,8 +81,5 @@ LEFT JOIN `br-apps-dolphin-ddp-prd.db_dolphin_datasharing_performaxxi.tbl_perfor
     ON a12.ecommerceId = a15.Entregas_Pedidos_IdPedido
 LEFT JOIN `br-apps-analytics-eng-dev.db_strategy_and_health.churn_ecomm_food` AS a16
     ON a11.Inicio_questionario = a16.transaction_month
-LEFT JOIN a17 
-   ON a17.transformed_referenceId = a12.cod_store
-
 GROUP BY
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60;
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59;
